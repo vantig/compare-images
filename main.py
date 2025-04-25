@@ -10,16 +10,20 @@ base64_image2 = "iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAACXBIWXMAAAsTAAA
 app = Flask(__name__)
 
 
-@app.route('/api/compare-image', methods=['POST'])
+@app.route('/', methods=['POST'])
 def hash_image():
     try:
+        print(request)
         # Get JSON payload
         data = request.json
-        if not data or 'base64_image' not in data:
+        if not data or 'base64_image1' not in data:
+            return jsonify({"error": "Missing 'base64_image' in request"}), 400
+        if not data or 'base64_image2' not in data:
             return jsonify({"error": "Missing 'base64_image' in request"}), 400
 
         # Decode the base64 image
-        base64_image2 = data['base64_image']
+        base64_image = data['base64_image1']
+        base64_image2 = data['base64_image2']
 
         # Decode the base64 string into bytes
         image_data = base64.b64decode(base64_image)
@@ -35,7 +39,8 @@ def hash_image():
         hash2 = imagehash.average_hash(image2)
         print(hash1 - hash2)
 
-        return jsonify({"isEqual": hash1 - hash2 < 4}), 200
+        return jsonify({"isSameImage": hash1 - hash2 < 4}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+app.run(host='0.0.0.0')    
