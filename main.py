@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def hash_image():
-    try:
+   
         print(request)
         # Get JSON payload
         data = request.json
@@ -41,6 +41,5 @@ def hash_image():
 
         return jsonify({"isSameImage": hash1 - hash2 < 4}), 200
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+  
 app.run(host='0.0.0.0')    
